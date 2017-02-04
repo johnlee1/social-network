@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div>
+
+        <br><br>
+
+        <div class="container-fluid text-center">
+            {% if not user_profile.profile_picture %}
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4">
+                    </div>
+                </div>
+            {% endif %}
+            {% if user_profile.profile_picture %}
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4">
+                        <img src="{% url 'photo' user_profile.id %}" class="img-circle" width="150" height="150">
+                    </div>
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <h3>{{ user_profile.user.first_name }} {{ user_profile.user.last_name }}</h3>
+                </div>
+            </div>
+            {%if user_profile.age > 0 %}
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <h5>Age: {{ user_profile.age}} </h5>
+                </div>
+            </div><br>
+            {% endif %}
+            {% if following and not myself %}
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4">
+                        <form method="POST" action="{% url 'follow' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="username" value="{{user_profile.user.username}}">
+                            <button type="submit" class="btn btn-success btn-xs">Follow</button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+            {% if notfollowing %}
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4">
+                        <form method="POST" action="{% url 'unfollow' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="username" value="{{user_profile.user.username}}">
+                            <button type="submit" class="btn btn-warning btn-xs">Unfollow</button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <p style="text-align: left">{{ user_profile.bio }}</p>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class = "row">
+            <div class="col-md-4 col-md-offset-4">
+                    <form method="POST" action="{% url 'addPost' %}">
+                        <div class="form-group">
+                            {% if post_form %}
+                                {% for field in post_form %}
+                                    {{ field.label }} {{ field }}
+                                {% endfor %}
+                                <br>
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-xs pull-right btn-publish-post">Post</button>
+                            {%  endif %}
+                        </div>
+                    </form>
+            </div>
+        </div>
+
+        <br><br>
+
+		<div class="feed-container">
+            {% for post in posts %}
+                <div class="panel-body post postContainer" postId="{{ post.id }}">
+                    <div class="media">
+                        <div class="col-md-4 col-md-offset-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">{{post.time}} | {{ post.date }}</div>
+                                <div class="panel-body">{{ post.content }}</div>
+                                <div class="commentSection">
+                                    <div class="commentsThread">
+                                        {% for comment in post.comment_set.all %}
+                                            <div class="panel-footer">
+                                                {% if not comment.author.profile_picture %}
+                                                    <div class="panel-heading"> <img src="https://lh3.googleusercontent.com/A9hkkCY0cXfwQL4LdNktOBIMSjC9o2_VwF1ShjN-oxpDHcI5Lz1BqhdZ0adS_28FCtJBdx5CDuO3pIZoeUS7_Mbrq_bU1UC7B2X8uV-XDTxazBMvM3cZBV9Np5oKiMODuKgK_WEyowhgSo6n8Xun6PxevnS8_UXa5B7YKVzRZrbq-PzSTJVuAq6FzhKcOXcvJ5gGi2EOAHFg1Ygxte3Ehz799_5Indk9tz8-9zWlVkbYgLEpXV72vKfOU2UuHjMu1xXQ0H-ZJAO4CYgJHcJtTKRC3oXMUivMs4GgEs3PTibdj6wsYjHIUkSgQiHnPcQEZC2QM_xzC9_ZnYVIaOF1q73tFWlUJs3SgbaDzzf0zI17cxQEUfmT9f12w9KbpeznPd_1xS2mbKxLQOGtjRngxecDw-M3zrZez-gMoiIV9I-iiywBs4SVbWFI9B8At3qWysk6CuYsRVI8rJQz68V1fN2k2_zjwTROF5mjqy9TpN6j5cRi-5XzpETvIgTbp6OBj2F0jZgcA_ACdTcuWUpY6s8qp1X3d4eLUclz-f9bIpbNgJpy-eCZrqDARX8ceE1hCLg=s636-no" alt="..." class="img-rounded" width="40" height="40">
+                                                    <a href="{% url 'otherProfile' comment.author.user.username %}">  {{ comment.author.user.username }}</a> <p class="pull-right">{{comment.datetime}}</p></div>
+                                                {% endif %}
+                                                {% if comment.author.profile_picture %}
+                                                    <div class="panel-heading"><img src="{% url 'photo' comment.author.id %}" class="img-rounded" width="40" height="40">
+                                                    <a href="{% url 'otherProfile' comment.author.user.username %}">{{ comment.author.user.username }}</a> <p class="pull-right">{{comment.datetime}}</p></div>
+                                                {% endif %}
+                                                {{ comment.body }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="panel-footer">
+                                        <div class="commentInput">
+                                            <div class="media-body">
+                                                {% for field in comment_form %}
+                                                    {{ field }}
+                                                {% endfor %}                                                
+                                                <button class="btn btn-default btn-xs commentBtn">Comment</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            {% endfor %}
+		</div>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "authBase.html" %}
+
+{% block content %}
+    <div class="container">
+
+        <br>
+
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <h2>Register</h2>
+            </div>
+        </div>
+
+        <form method="POST" action="{% url 'register' %}">
+            {% for field in form %}
+                {% if field.errors %}
+                    <div class="row">
+                        <div class="col-md-4 col-md-offset-4">
+							{#{{ field.errors }}#}
+                            <br>
+                            <p>Error. Please enter again.</p>
+                        </div>
+		            </div>
+                {% endif %}
+
+                <div class="row">
+			        <div class="col-md-4 col-md-offset-4">
+                        {{ field }}
+                    </div>
+		        </div>
+
+            {% endfor %}
+
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <input type="submit" class="btn" style="background-color: White; border: 1px solid black">
+                </div>
+            </div>
+        </form>
+        <br>
+        {% csrf_token %}
+        <form method="GET" action="{% url 'login' %}">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <input id="registerBtn" type="submit" value="Login">
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

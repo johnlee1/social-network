@@ -1,0 +1,72 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: table;
+    font-weight: 300;
+    font-family: 'Lato';
+}
+
+.container {
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 60px;
+}
+
+.content {
+    text-align: center;
+    display: inline-block;
+}
+
+.title {
+    font-size: 60px;
+    font-weight: 100;
+}
+
+a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+#registerBtn {
+    background:none;
+    border:none;
+    color:blue;
+}
+
+h2 {
+    margin-bottom: 15px;
+}
+
+#id_username {
+    margin-bottom: 10px;
+}
+
+#id_first_name {
+    margin-bottom: 10px;
+}
+
+#id_last_name {
+    margin-bottom: 10px;
+}
+
+#id_password {
+    margin-bottom: 20px;
+}
+
+#id_password1 {
+    margin-bottom: 10px;
+}
+
+#id_password2 {
+    margin-bottom: 20px;
+}
+
+#id_email {
+    margin-bottom: 10px;
+}

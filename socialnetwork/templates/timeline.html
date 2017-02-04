@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div>
+
+        <br><br>
+
+		<div class="feed-container timelineBegin">
+            {% for post in posts %}
+                <div class="panel-body post postContainer" postId="{{ post.id }}">
+                    <div class="media">
+                        <div class="col-md-6 col-md-offset-3">
+                            <div class="panel panel-default">
+                                {% if not post.user.profile_picture %}
+                                    <div class="panel-heading">
+                                    <a href="{% url 'otherProfile' post.user.user.username %}">  {{ post.user.user.username }}</a> <p class="pull-right">{{post.time}} | {{ post.date }}</p></div>
+                                    <div class="panel-body">{{ post.content }}</div>
+                                {% endif %}
+                                {% if post.user.profile_picture %}
+                                    <div class="panel-heading"><img src="{% url 'photo' post.user.id %}" class="img-circle" width="50" height="50">
+                                    <a href="{% url 'otherProfile' post.user.user.username %}">{{ post.user.user.username }}</a> <p class="pull-right">{{post.time}} | {{ post.date }}</p></div>
+                                    <div class="panel-body">{{ post.content }}</div>
+                                {% endif %}
+                                <div class="commentSection">
+                                    <div class="commentsThread">
+                                        {% for comment in post.comment_set.all %}
+                                            <div class="panel-footer">
+                                                {% if not comment.author.profile_picture %}
+                                                    <div class="panel-heading">
+                                                    <a href="{% url 'otherProfile' comment.author.user.username %}">  {{ comment.author.user.username }}</a> <p class="pull-right">{{comment.datetime}}</p></div>
+                                                {% endif %}
+                                                {% if comment.author.profile_picture %}
+                                                    <div class="panel-heading"><img src="{% url 'photo' comment.author.id %}" class="img-rounded" width="40" height="40">
+                                                    <a href="{% url 'otherProfile' comment.author.user.username %}">{{ comment.author.user.username }}</a> <p class="pull-right">{{comment.datetime}}</p></div>
+                                                {% endif %}
+                                                {{ comment.body }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="panel-footer">
+                                        <div class="commentInput">
+                                            <div class="media-body">
+                                                {% for field in comment_form %}
+                                                    {{ field }}
+                                                {% endfor %}     
+                                                <br>                                           
+                                                <button class="btn btn-default btn-xs commentBtn">Comment</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+		</div>
+
+    </div>
+{% endblock %}
